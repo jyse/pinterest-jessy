@@ -1,0 +1,55 @@
+.pin {
+  height: fit-content;
+  display: inline-block;
+  margin: 0 0 1em;
+}
+
+.pin__container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.pin__container .medium {
+  width: 252px;
+  height: 400px;
+}
+.pin__container .medium > img {
+  width: 236px;
+  height: 354px;
+}
+
+.pin__container .small {
+  width: 252px;
+  height: 292px;
+}
+
+.pin__container .small > img {
+  width: 236px;
+  height: 236px;
+}
+
+.pin__container > img {
+  display: flex;
+  cursor: zoom-in;
+  border-radius: 16px;
+  object-fit: cover;
+}
+
+.pin__text__container {
+  display: flex;
+  flex: 1;
+  background-color: white;
+  box-sizing: border-box;
+  padding: 8px 6px 16px;
+}
+
+.pin__text__container p {
+  color: #111;
+  font-size: 12px;
+  font-weight: 700;
+  text-decoration: none;
+  text-align: left;
+}

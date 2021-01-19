@@ -1,0 +1,9 @@
+.mainboard {
+  display: flex;
+  flex-wrap: wrap;
+  padding-top: 15px;
+  width: 80%;
+  height: 100%;
+  column-count: 4;
+  column-gap: 1em;
+}
