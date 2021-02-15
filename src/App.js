@@ -1,23 +1,81 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import { useState, useEffect } from "react";
+import Header from "./Header";
+import Mainboard from "./Mainboard";
+import unsplash from "./api/unsplash";
+import db from "./firebase";
 
 function App() {
+  const [pins, setNewPins] = useState([]);
+
+  const makeAPICall = (term) => {
+    return unsplash.get("https://api.unsplash.com/search/photos", {
+      params: { query: term },
+    });
+  };
+
+  const onSearchSubmit = (term) => {
+    let promises = [];
+    let searchedPins = [];
+    promises.push(
+      makeAPICall(term).then((res) => {
+        let results = res.data.results;
+        results.map((pin) => {
+          searchedPins.push(pin);
+        });
+      })
+    );
+    Promise.all(promises).then(() => {
+      setNewPins(searchedPins);
+    });
+  };
+
+  const getNewPins = () => {
+    let promises = [];
+    let pinData = [];
+
+    db.collection("terms").onSnapshot((snapshot) => {
+      let snapshotData = snapshot.docs;
+
+      console.log(snapshotData);
+
+      if (snapshotData.length >= 10) {
+        snapshotData = snapshotData.slice(
+          snapshotData.length - 8,
+          snapshotData.length
+        );
+      }
+
+      snapshotData.map((doc) => {
+        promises.push(
+          makeAPICall(doc.data().term).then((res) => {
+            let results = res.data.results;
+            results.map((object) => {
+              pinData.push(object);
+            });
+
+            pinData.sort(function (a, b) {
+              return 0.5 - Math.random();
+            });
+          })
+        );
+      });
+      Promise.all(promises).then(() => {
+        setNewPins(pinData);
+      });
+    });
+  };
+
+  useEffect(() => {
+    getNewPins();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Header onSubmit={onSearchSubmit} />
+      <div className="app__body">
+        <Mainboard pins={pins} />
+      </div>
     </div>
   );
 }
