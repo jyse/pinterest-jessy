@@ -61,12 +61,14 @@ function App() {
         );
       });
       Promise.all(promises).then(() => {
+        console.log(pinData, "what is in PinData");
         setNewPins(pinData);
       });
     });
   };
 
   useEffect(() => {
+    console.log("useEffect");
     getNewPins();
   }, []);
 
